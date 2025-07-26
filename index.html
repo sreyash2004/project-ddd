@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Drowsiness Detection</title>
+
+    <!-- Google Fonts: Nunito Sans and PT Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            background-color: #f9f9f9;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        h1 {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .container {
+            width: 60%;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        #video-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #video-feed {
+            display: none;
+            width: 80%;
+            border: 3px solid #333;
+            border-radius: 12px;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2); /* Improved Silhouette */
+        }
+
+        #status-box {
+            margin-top: 20px;
+            margin-bottom: 30px;
+            font-size: 18px;
+            font-family: 'PT Sans', sans-serif;
+            font-weight: bold;
+            color: #555;
+        }
+
+        button {
+            margin-top: 10px;
+            margin-bottom: 20px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-family: 'Nunito Sans', sans-serif;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #start-btn {
+            background-color: #28a745;
+            color: white;
+            margin-right: 15px; /* Increased space between buttons */
+        }
+
+        #stop-btn {
+            background-color: #dc3545;
+            color: white;
+            margin-left: 15px;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        #btn-container {
+            margin-top: 20px;
+        }
+    </style>
+
+    <script>
+        function startDetection() {
+            fetch('/start_detection', { method: 'POST' })
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById('video-feed').src = "/video_feed";
+                        document.getElementById('video-feed').style.display = 'block'; // Show feed
+                        document.getElementById('state').innerText = "Detection Started 🚀";
+                        console.log("✅ Detection started.");
+                    } else {
+                        alert("❌ Error starting detection.");
+                    }
+                });
+        }
+
+        function stopDetection() {
+            fetch('/stop_detection', { method: 'POST' })
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById('video-feed').src = "";
+                        document.getElementById('video-feed').style.display = 'none'; // Hide feed
+                        document.getElementById('state').innerText = "Detection Stopped ⏹️";
+                        console.log("⏹️ Detection stopped.");
+                    } else {
+                        alert("❌ Error stopping detection.");
+                    }
+                });
+        }
+    </script>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Drowsiness Detection System</h1>
+
+        <div id="video-container">
+            <img id="video-feed" src="" alt="">
+        </div>
+
+        <div id="status-box">
+            <p>Status: <span id="state">Awaiting Start</span></p>
+        </div>
+
+        <div id="btn-container">
+            <button id="start-btn" onclick="startDetection()">▶️ Start Detection</button>
+            <button id="stop-btn" onclick="stopDetection()">⏹️ Stop Detection</button>
+        </div>
+    </div>
+
+</body>
+
+</html>
